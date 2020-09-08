@@ -1,6 +1,11 @@
 This project is made by REACTJS 🌟 + Firebase 🔥in Saturday 05 September 2020.
 
+    - I'm using BEM CSS on my div class names.
+        * BEM CSS is a cool way to name your div classes 👉
+        The Block, Element, Modifier methodology (commonly referred to as BEM) is a popular naming convention for classes in HTML and CSS. Developed by the team at Yandex, its goal is to help developers better understand the relationship between the HTML and CSS in a given project. 
+    - I'm using MATERIAL UI.
 
+    -BTW it's Called REACT , because it's litteraly reacting only on the changes that needs to.
 
 
 

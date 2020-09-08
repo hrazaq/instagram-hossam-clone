@@ -1,4 +1,16 @@
-.App {
-  text-align: center;
+* {
+  margin: 0;
 }
+
+.app {
+  background-color: #fafafa;
+}
+
+.app__header {
+  background-color: white;
+  padding: 20px;
+  border-bottom: 1px solid lightgray; /* The ligne in botton of the header */
+  object-fit: contain; /* Keep the aspect ratio */
+}
+
 
