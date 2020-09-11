@@ -7,6 +7,10 @@ This project is made by REACTJS 🌟 + Firebase 🔥in Saturday 05 September 202
 
     -BTW it's Called REACT , because it's litteraly reacting only on the changes that needs to.
 
+    - Npm i firebase after firebase config.
+
+    - Adding key to the post , let refreshing just the new one not all the posts.
+
 
 
 

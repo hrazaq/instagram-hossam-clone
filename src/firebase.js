@@ -11,6 +11,8 @@ const firebaseApp = firebase.initializeApp({
     measurementId: "G-N7LN41SHDT"
 });
 
-const db = firebaseApp.firestore();
+const db = firebaseApp.firestore(); // for db 
+const auth = firebase.auth(); // for authentication
+const storage = firebase.storage() // for saving files(images)
 
-export default db;
+export  { db, auth, storage };

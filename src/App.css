@@ -13,4 +13,9 @@
   object-fit: contain; /* Keep the aspect ratio */
 }
 
+.app__signup {
+  display: flex;
+  flex-direction: column; /* Direction of fLEX*/
+}
+
 

@@ -1,35 +1,194 @@
-import React , {useState} from 'react';
+import React , {useState, useEffect} from 'react';
 import './App.css';
 import Post from './Post';
+import { db, auth } from "./firebase";
+import { Modal, Button, makeStyles, Input } from '@material-ui/core';
+
+function getModalStyle() {
+  const top = 50;
+  const left = 50;
+
+  return {
+    top: `${top}%`,
+    left: `${left}%`,
+    transform: `translate(-${top}%, -${left}%)`,
+  };
+}
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    position: 'absolute',
+    width: 400,
+    backgroundColor: theme.palette.background.paper,
+    border: '2px solid #000',
+    boxShadow: theme.shadows[5],
+    padding: theme.spacing(2, 4, 3),
+  },
+}));
+
 
 function App() {
-  const [posts, setPosts] = useState([
-    {
-      username: "hossam_music1",
-      caption: "Wow ! 🚀", 
-      imageUrl: "data:image/jpeg;base64,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"
-    }, 
-    {
-      username: "linda_am01", 
-      caption: "Yeaah 🔥",
-      imageUrl: "https://i.ytimg.com/vi/sdCGTP9_22I/sddefault.jpg"
+  const [posts, setPosts] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [openSignIn, setOpenSignIn] = useState(false);
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [user, setUser] = useState(null);
+  const classes = useStyles();
+  // getModalStyle is not a pure function, we roll the style only on the first render
+  const [modalStyle] = React.useState(getModalStyle);
+
+  // UseEffect Runs a piece of code based on a specific condition !
+  useEffect(() => {
+    db.collection('posts').onSnapshot(snapshot => {
+      setPosts(snapshot.docs.map(doc => ({
+        id: doc.id,
+        post: doc.data()
+      })));
+    })
+  }, []);
+
+  // listen on any sort of authentificatino changes happens login, signup, logout...
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((authUser) => {
+      if(authUser) {
+          // user has logged in...
+          console.log(authUser);
+          setUser(authUser); // keep you logged in...
+      } else {
+        // user has logged out...
+        setUser(null);
+      }
+    })
+    return () => {
+      // perform some cleanup actions
+      unsubscribe();
     }
-  ]);
+  }, [user, username]);
+
+  const signUp = (event) => {
+    event.preventDefault(); // to not load the page after submitting
+
+    //Authentication
+    auth.createUserWithEmailAndPassword(email, password)
+    .then((authUser) => {
+      setOpen(false);
+      return authUser.user.updateProfile({
+        displayName: username
+      })
+    })
+    .catch((error) => alert(error.message)) // for validation
+
+  }
+
+  const signIn = (event) => {
+    event.preventDefault(); // to not load the page after submitting
+
+    //Authentication
+    auth.signInWithEmailAndPassword(email, password)
+    .then((authUser) => {
+      setOpenSignIn(false);
+    })
+    .catch((error) => alert(error.message)) // for validation
+   
+  }
 
   return (
     <div className="app">
+      {/* Modal Authentification */}
+      {/* Start SignUp Modal */}
+      <Modal
+        open={open}
+        onClose={() => setOpen(false)}  // that is called -> inline functions 
+      >
+        <div style={modalStyle} className={classes.paper}>
+          <form className="app__signup"> 
+            <center>
+              <img
+                className="app__headerImage"
+                src="https://www.instagram.com/static/images/web/mobile_nav_type_logo-2x.png/1b47f9d0e595.png"
+                alt="InstagramLogo"
+              />
+            </center>
+            <Input
+                placeholder="username"
+                type="text"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)} 
+            />
+            <Input
+              placeholder="email"
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)} 
+            />
+            <Input
+              placeholder="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)} 
+            />
+            <Button type="submit" onClick={signUp}>Sign Up</Button>
+          </form>
+        </div>
+      </Modal>
+      {/* End SignUp Modal */}
+      {/* Start SignIn Modal */}
+      <Modal
+        open={openSignIn}
+        onClose={() => setOpenSignIn(false)}  // that is called -> inline functions 
+      >
+        <div style={modalStyle} className={classes.paper}>
+          <form className="app__signup"> 
+            <center>
+              <img
+                className="app__headerImage"
+                src="https://www.instagram.com/static/images/web/mobile_nav_type_logo-2x.png/1b47f9d0e595.png"
+                alt="InstagramLogo"
+              />
+            </center>
+            <Input
+              placeholder="email"
+              type="text"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)} 
+            />
+            <Input
+              placeholder="password"
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)} 
+            />
+            <Button type="submit" onClick={signIn}>Sign In</Button>
+          </form>
+        </div>
+      </Modal>
+      {/* End SignIn Modal */}
       {/* header */}
       <div className="app__header">
         <img
           className="app__headerImage"
           src="https://www.instagram.com/static/images/web/mobile_nav_type_logo-2x.png/1b47f9d0e595.png"
-          alt="InstagramLogo">
-        </img>
+          alt="InstagramLogo"
+        />
+
+        {/* If else in jsx -> if user is not null else... */}
+        {user ? (
+          <Button onClick={() =>auth.signOut()}>Logout</Button>
+        ): (
+          <div className="app__loginContainer">
+            <Button onClick={() =>setOpenSignIn(true)}>Sing In</Button>
+            <Button onClick={() =>setOpen(true)}>Sign Up</Button>
+          </div>
+        )}
+
+        
       </div>
      
      {
-       posts.map(post => (
-          <Post username={post.username} caption={post.caption} imageUrl={post.imageUrl}/>
+       posts.map(({id, post}) => (
+          <Post key={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl}/>
        ))
      }
      {/* Posts */}
