@@ -3,6 +3,8 @@ import './App.css';
 import Post from './Post';
 import { db, auth } from "./firebase";
 import { Modal, Button, makeStyles, Input } from '@material-ui/core';
+import ImageUpload from './ImageUpload';
+import InstagramEmbed from 'react-instagram-embed';
 
 function getModalStyle() {
   const top = 50;
@@ -41,7 +43,7 @@ function App() {
 
   // UseEffect Runs a piece of code based on a specific condition !
   useEffect(() => {
-    db.collection('posts').onSnapshot(snapshot => {
+    db.collection('posts').orderBy('timestamp', 'desc').onSnapshot(snapshot => {
       setPosts(snapshot.docs.map(doc => ({
         id: doc.id,
         post: doc.data()
@@ -185,12 +187,35 @@ function App() {
 
         
       </div>
+
+      <div className="app__posts">
+          <div className="app__postsleft">
+            {
+              posts.map(({id, post}) => (
+                  <Post key={id} postId={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl}/>
+              ))
+            }
+          </div>
+          <div className="app__postsright">
+            <InstagramEmbed
+              url='https://www.instagram.com/p/By_CjxdHEY9/'
+              maxWidth={320}
+              hideCaption={false}
+              containerTagName='div'
+              protocol=''
+              injectScript
+              onLoading={() => {}}
+              onSuccess={() => {}}
+              onAfterRender={() => {}}
+              onFailure={() => {}}/>
+          </div>
+      </div>
      
-     {
-       posts.map(({id, post}) => (
-          <Post key={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl}/>
-       ))
-     }
+      {user?.displayName ? (
+          <ImageUpload username={user.displayName}/>
+      ): (
+          <h3>Sorry you need to Login to upload...</h3>
+      )}
      {/* Posts */}
      {/* Posts */}
     </div>

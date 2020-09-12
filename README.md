@@ -9,7 +9,9 @@ This project is made by REACTJS 🌟 + Firebase 🔥in Saturday 05 September 202
 
     - Npm i firebase after firebase config.
 
-    - Adding key to the post , let refreshing just the new one not all the posts.
+    - Adding key to the post , let refreshing just    the new one not all the posts.
+
+    - I used react instagram embed.
 
 
 

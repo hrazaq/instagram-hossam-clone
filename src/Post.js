@@ -1,9 +1,12 @@
-import React from 'react'
+import React , { useState } from 'react'
 import './Post.css'
 import Avatar from '@material-ui/core/Avatar';
 
  
 function Post({username, caption, imageUrl}) { // we can use props => props.username ... or an object !
+    const [comments, setComments] = useState([]);
+    
+    
     return (
         <div className="post">
             {/*  header -> avatar + username */}
