@@ -62,7 +62,7 @@ function App() {
         // user has logged out...
         setUser(null);
       }
-    })
+    }) 
     return () => {
       // perform some cleanup actions
       unsubscribe();
@@ -192,13 +192,13 @@ function App() {
           <div className="app__postsleft">
             {
               posts.map(({id, post}) => (
-                  <Post key={id} postId={id} username={post.username} caption={post.caption} imageUrl={post.imageUrl}/>
+                  <Post key={id} postId={id} user={user} username={post.username} caption={post.caption} imageUrl={post.imageUrl}/>
               ))
             }
           </div>
           <div className="app__postsright">
             <InstagramEmbed
-              url='https://www.instagram.com/p/By_CjxdHEY9/'
+              url='https://www.instagram.com/p/CFD7z8OAFee/'
               maxWidth={320}
               hideCaption={false}
               containerTagName='div'
@@ -214,7 +214,7 @@ function App() {
       {user?.displayName ? (
           <ImageUpload username={user.displayName}/>
       ): (
-          <h3>Sorry you need to Login to upload...</h3>
+          <h3 className="app__soryy">Sorry you need to Login to upload & Comment...</h3>
       )}
      {/* Posts */}
      {/* Posts */}
